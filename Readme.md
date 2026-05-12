@@ -4,6 +4,10 @@ A simple demonstration of an MCP project for working with local system files. It
 
 ## Running the Project
 
+#activate environment 
+
+source ../.venv/bin/activate
+
 To run the server:
 
 ```bash

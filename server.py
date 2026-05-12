@@ -6,14 +6,22 @@ mcp = FastMCP("file-assistant")
 
 # 2. Use the .tool() decorator from the mcp instance
 @mcp.tool()
-def list_files(directory: str) -> list:
-    """List all files in a directory"""
+def list_files(directory: str = ".") -> str: # Added a default
+    """List all files in a directory. Returns a formatted string of filenames."""
     try:
-        # Expand user paths (like ~) for better usability
-        path = os.path.expanduser(directory)
-        return os.listdir(path)
+        # 1. Expand paths
+        target_path = os.path.abspath(os.path.expanduser(directory))
+        
+        # 2. Get the list
+        files = os.listdir(target_path)
+        
+        # 3. Return a clean string (LLMs handle strings better than raw lists sometimes)
+        if not files:
+            return f"The directory '{target_path}' is empty."
+            
+        return f"Files in {target_path}:\n- " + "\n- ".join(files)
     except Exception as e:
-        return [f"Error: {str(e)}"]
+        return f"Error reading directory: {str(e)}"
 
 @mcp.tool()
 def read_file(path: str) -> str:
